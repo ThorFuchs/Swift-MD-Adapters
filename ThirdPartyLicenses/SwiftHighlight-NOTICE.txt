@@ -1,0 +1,4 @@
+Swift-Highlight
+Includes HighlightKit, Copyright (c) 2026 Phrase and HighlightKit contributors, under the MIT license,
+and material derived from highlight.js under the BSD 3-Clause license.
+See THIRD_PARTY_NOTICES.md and Licenses/ for details and full license texts.

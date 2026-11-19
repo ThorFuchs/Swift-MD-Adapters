@@ -1,0 +1,16 @@
+Swift-GFM
+Copyright 2026 Swift-GFM contributors
+
+Swift-GFM's original code is licensed under the Apache License, Version 2.0.
+See LICENSE in the root of this repository.
+
+This distribution includes the unmodified GitHub cmark-gfm source at commit
+27d942c8b0a62d192f616e5bf3578f4b6a89e180. Its copyright, license terms, and
+third-party notices are retained in Vendor/GitHubCMark/COPYING. This component
+retains its original licenses.
+
+The test-only CommonMark and GFM specification fixtures are licensed under
+Creative Commons Attribution-ShareAlike 4.0 International. See
+Tests/SwiftGFMTests/Fixtures/cmark-gfm/LICENSE and
+Tests/SwiftGFMTests/Fixtures/cmark-gfm/README.md for their provenance and terms.
+They are not part of the SwiftGFM library or executable.

@@ -1,0 +1,75 @@
+{
+  "source_commit": "68903e4f0773df52956bf30510969bdd212d7bbd",
+  "local_test_only": false,
+  "dependencies": {
+    "CORE_URL": "https://github.com/ThorFuchs/Swift-MD.git",
+    "CORE_VERSION": "1.0.0",
+    "GFM_URL": "https://github.com/ThorFuchs/Swift-GFM.git",
+    "GFM_VERSION": "1.0.1",
+    "HIGHLIGHT_URL": "https://github.com/ThorFuchs/Swift-Highlight.git",
+    "HIGHLIGHT_VERSION": "1.0.1"
+  },
+  "renderer_resources": {
+    "katex": {
+      "version": "0.19.1",
+      "source": "https://registry.npmjs.org/katex/-/katex-0.19.1.tgz",
+      "archive_integrity": "sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA==",
+      "files_sha256": {
+        "katex.cjs": "8f4f4efac9e80863b0ef9946c004928ad3bd33bbbeabcc8531c605c82a1bb545",
+        "KaTeX-LICENSE.txt": "766ccc1f306c885aa45542a9846bbd0a505b27a0374f146778171c2254ce18e3",
+        "KaTeX-THIRD-PARTY.md": "9bafc6d18317c3559902a95ee0dab91462a7b21089cd036b47c8343a50e2a92a",
+        "KaTeX-SIL-OFL-1.1.txt": "8eea8287e5876b539670cadb82e99f9a7afddec6f6730811be1daf25d2e9bcfd",
+        "Apache-2.0.txt": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      }
+    },
+    "pele": {
+      "version": "1.13.0",
+      "source": "https://registry.npmjs.org/pele/-/pele-1.13.0.tgz",
+      "archive_integrity": "sha512-Ie8UKY9x00MsuR3jO6AzUwzK2Z6MIV3Tf4EDdITiuk8Uaz8K7g0R082WqsqNaSU8DdgkrRvZThzhit83mi/uiw==",
+      "files_sha256": {
+        "pele.mjs": "37bea5005aa6d2dde929032ced5d2958cf642667cbc1fe675f9dfacf4ba15a51",
+        "pele.global.js": "0b0a46c57a5a6971670c09f5ec4066705bd78505f90fd11adf6260325efa0910",
+        "Pele-LICENSE.txt": "311bccc30de6f7b9cbfb64232bb0c911ccb2191abe316550813ae25b2c7925b9",
+        "Pele-THIRD-PARTY.md": "e2abfa309040b06ed5cf5729844fa2b5fcd8c66326b731bce507c4a2c94973fe",
+        "Pele-esbuild-MIT.txt": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681",
+        "Pele-Mermaid-MIT.txt": "ec9fb67dcb25eccc416ed56e1aab819222c805a2a4bfe4cb19e7556bf2ffde80",
+        "Pele-d3-time-ISC.txt": "faa682e3e430941f958d26180458f5934a62f58dac4d70ccdd15608c15d0f884",
+        "Pele-d3-time-format-and-scale-ISC.txt": "e008c5e25a6be382593089c29bfabbc553c6378eee02895aec46ce396cc404ee"
+      }
+    }
+  },
+  "verified_public_tags": {
+    "swift-gfm": {
+      "url": "https://github.com/ThorFuchs/Swift-GFM.git",
+      "version": "1.0.1",
+      "revision": "2cb9450cf755858d338525fe64081b5f04864a2d"
+    },
+    "swift-highlight": {
+      "url": "https://github.com/ThorFuchs/Swift-Highlight.git",
+      "version": "1.0.1",
+      "revision": "71d23c52a4afe154acdcc3b8aee968f0bf1b8564"
+    },
+    "lrucache": {
+      "url": "https://github.com/nicklockwood/LRUCache.git",
+      "version": "1.3.0",
+      "revision": "f0570e943ea4445d258113ba73f50cb2b7e564ac"
+    },
+    "swift-atomics": {
+      "url": "https://github.com/apple/swift-atomics.git",
+      "version": "1.3.1",
+      "revision": "0442cb5a3f98ab802acb777929fdb446bda11a34"
+    },
+    "swift-md": {
+      "url": "https://github.com/ThorFuchs/Swift-MD.git",
+      "version": "1.0.0",
+      "revision": "68903e4f0773df52956bf30510969bdd212d7bbd"
+    }
+  },
+  "vendored_swiftsoup": {
+    "repository": "https://github.com/scinfu/SwiftSoup.git",
+    "version": "2.11.3",
+    "revision": "d86f244ed497d48012782e2f59c985a55e77b3f5",
+    "sources_tree": "33ce5dc7a74bac14957780845869dd7f8e809e0d"
+  },
+  "release_review_required": true
+}
