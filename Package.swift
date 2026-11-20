@@ -5,6 +5,7 @@ let package = Package(
     name: "SwiftMDAdapters",
     platforms: [.macOS(.v15), .iOS(.v18), .tvOS(.v18), .watchOS(.v11), .visionOS(.v2)],
     products: [
+        .library(name: "SwiftMDDOCX", targets: ["SwiftMDDOCX"]),
         .library(name: "SwiftMDBlocks", targets: ["SwiftMDBlocks"]),
         .library(name: "SwiftMDHighlight", targets: ["SwiftMDHighlight"]),
         .library(name: "SwiftMDKaTeXNode", targets: ["SwiftMDKaTeXNode"]),
@@ -15,13 +16,14 @@ let package = Package(
         .executable(name: "swift-md", targets: ["SwiftMDCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ThorFuchs/Swift-MD.git", exact: "1.0.0"),
+        .package(url: "https://github.com/ThorFuchs/Swift-MD.git", exact: "1.0.1"),
         .package(url: "https://github.com/ThorFuchs/Swift-GFM.git", exact: "1.0.1"),
         .package(url: "https://github.com/ThorFuchs/Swift-Highlight.git", exact: "1.0.1"),
         .package(url: "https://github.com/nicklockwood/LRUCache.git", exact: "1.3.0"),
         .package(url: "https://github.com/apple/swift-atomics.git", exact: "1.3.1"),
     ],
     targets: [
+        .target(name: "SwiftMDDOCX", dependencies: [.product(name: "SwiftGFM", package: "Swift-GFM")], path: "Adapters/SwiftMDDOCX/Sources/SwiftMDDOCX"),
         .target(name: "SwiftMDSoup", dependencies: [.product(name: "LRUCache", package: "LRUCache"), .product(name: "Atomics", package: "swift-atomics")], path: "Adapters/SwiftMDBlocks/Vendor/SwiftSoup", exclude: ["UPSTREAM.json"], sources: ["Sources"], resources: [.copy("LICENSE"), .copy("JSOUP-LICENSE.txt")], swiftSettings: [.swiftLanguageMode(.v5)]),
         .target(name: "SwiftMDBlocks", dependencies: [.product(name: "SwiftMD", package: "Swift-MD"), "SwiftMDSoup"], path: "Adapters/SwiftMDBlocks/Sources/SwiftMDBlocks"),
         .target(name: "SwiftMDHighlight", dependencies: ["SwiftMDBlocks", .product(name: "SwiftHighlight", package: "Swift-Highlight"), .product(name: "SwiftHighlightHTML", package: "Swift-Highlight")], path: "Adapters/SwiftMDBlocks/Sources/SwiftMDHighlight"),
@@ -31,6 +33,7 @@ let package = Package(
         .target(name: "SwiftMDJavaScriptCore", dependencies: ["SwiftMDBlocks", "SwiftMDHighlight", .product(name: "SwiftMD", package: "Swift-MD"), .product(name: "SwiftGFM", package: "Swift-GFM")], path: "Adapters/SwiftMDBlocks/Sources/SwiftMDJavaScriptCore"),
         .target(name: "SwiftMDBundled", dependencies: ["SwiftMDBlocks", .target(name: "SwiftMDJavaScriptCore", condition: .when(platforms: [.macOS, .iOS, .tvOS, .watchOS, .visionOS])), .target(name: "SwiftMDCompiler", condition: .when(platforms: [.linux]))], path: "Adapters/SwiftMDBlocks/Sources/SwiftMDBundled", resources: [.copy("RendererAssets")]),
         .executableTarget(name: "SwiftMDCLI", dependencies: ["SwiftMDBlocks", "SwiftMDHighlight", "SwiftMDKaTeXNode", "SwiftMDPeleNode", .product(name: "SwiftMD", package: "Swift-MD"), .product(name: "SwiftGFM", package: "Swift-GFM")], path: "Tools/SwiftMDCLI/Sources/SwiftMDCLI"),
+        .testTarget(name: "SwiftMDDOCXTests", dependencies: ["SwiftMDDOCX"], path: "Adapters/SwiftMDDOCX/Tests/SwiftMDDOCXTests", resources: [.copy("Fixtures")]),
         .testTarget(name: "SwiftMDBlocksTests", dependencies: ["SwiftMDBlocks", "SwiftMDHighlight", "SwiftMDKaTeXNode", "SwiftMDPeleNode", "SwiftMDCompiler", "SwiftMDJavaScriptCore", "SwiftMDSoup", .product(name: "SwiftGFM", package: "Swift-GFM"), .product(name: "SwiftMD", package: "Swift-MD")], path: "Adapters/SwiftMDBlocks/Tests/SwiftMDBlocksTests"),
     ], swiftLanguageModes: [.v6]
 )
