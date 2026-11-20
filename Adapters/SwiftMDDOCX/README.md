@@ -18,7 +18,8 @@ try document.write(to: URL(fileURLWithPath: "example.docx"), options: .atomic)
 The source package is `Adapters/SwiftMDDOCX`; the canonical adapter-mirror
 generator includes its product for a future generated distribution. No mirror
 or version containing this spike is published merely by building the source.
-The adapter depends on SwiftGFM 1.0.1 and preserves its default GFM parsing.
+The adapter depends on SwiftGFM 1.1.0 and preserves its default GFM parsing.
+The DOCX projection does not render Markdown math into Office Math.
 
 Supported: paragraphs, soft and hard breaks (both become Word line breaks),
 headings 1–6, bold, italic, strikethrough, inline and block code, blockquotes,

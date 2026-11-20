@@ -1,5 +1,10 @@
 # SwiftSoup source distribution review
 
+**Historical:** This records the published SwiftMD 1.0.0 distribution and its
+SwiftSoup 2.11.3 source. The current local SwiftHTML integration uses the
+separate SwiftHTML package and SwiftSoup 2.14.4; it does not include the old
+`SwiftMDSoup` source. Paths and scripts below describe the 1.0.0 Git tree.
+
 The adapter package now vendors the library sources from SwiftSoup 2.11.3,
 commit `d86f244ed497d48012782e2f59c985a55e77b3f5`, as the private
 `SwiftMDSoup` module. Its MIT `LICENSE` is retained unchanged as a package

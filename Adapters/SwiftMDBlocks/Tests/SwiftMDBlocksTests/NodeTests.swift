@@ -52,6 +52,80 @@ final class NodeTests: XCTestCase {
         XCTAssertFalse(result.html.contains("<script>"))
         XCTAssertTrue(result.html.contains("&lt;script&gt;"))
     }
+    func testRealKaTeXInlineAndDisplayModes() throws {
+        let (math, _) = try renderers()
+        let tex = #"\frac{x_1}{y^2} + \text{<tag> \& hello}"#
+        let inline = try math.renderMath(literal: tex, displayMode: false)
+        let display = try math.renderMath(literal: tex, displayMode: true)
+        for output in [inline, display] {
+            XCTAssertTrue(output.contains("<math xmlns=\"http://www.w3.org/1998/Math/MathML\""))
+            XCTAssertTrue(output.contains("<mfrac>"))
+            XCTAssertTrue(output.contains("&lt;tag&gt;"))
+            XCTAssertFalse(output.contains("<tag>"))
+            XCTAssertFalse(output.contains("<script"))
+        }
+        XCTAssertFalse(inline.contains("display=\"block\""))
+        XCTAssertTrue(display.contains("display=\"block\""))
+        XCTAssertThrowsError(try math.renderMath(literal: #"\unknowncommand"#, displayMode: false))
+        XCTAssertThrowsError(try math.renderMath(literal: String(repeating: "x", count: 16_385), displayMode: false))
+        for unsafe in [#"\href{javascript:alert(1)}{click}"#, #"\includegraphics{https://evil.test/image.png}"#] {
+            let output = try math.renderMath(literal: unsafe, displayMode: false)
+            XCTAssertFalse(output.contains("<a "))
+            XCTAssertFalse(output.contains("<img"))
+        }
+    }
+
+    func testStructuredMathStreamWithRealRenderersAndEscapedFallback() throws {
+        let (math, diagram) = try renderers()
+        let parts: [MathDocumentPart] = [
+            .html("<p>Inline "),
+            .math(.init(index: 0, literal: #"x^2"#, source: #"$x^2$"#, displayMode: false)),
+            .html(" and broken "),
+            .math(.init(index: 1, literal: #"\badcommand{<script>}"#, source: #"$\badcommand{<script>}$"#, displayMode: false)),
+            .html(".</p><p>Before</p>"),
+            .math(.init(index: 2, literal: #"\frac{x}{2}"#, source: "$$\\frac{x}{2}$$", displayMode: true)),
+            .html("<pre><code class=\"language-swift\">let x = 1\n</code></pre>"),
+            .html("<pre><code class=\"language-mermaid\">flowchart LR\nA--&gt;B\n</code></pre>")
+        ]
+        let result = try BlockCompiler(renderers: [diagram, HighlightRenderer()]).render(parts, mathRenderer: math)
+        XCTAssertEqual(result.diagnostics.count, 1)
+        XCTAssertEqual(result.diagnostics.first?.kind, .renderFailed)
+        XCTAssertEqual(result.diagnostics.first?.blockIndex, 1)
+        XCTAssertTrue(result.html.contains(try math.renderMath(literal: "x^2", displayMode: false)))
+        XCTAssertTrue(result.html.contains(try math.renderMath(literal: #"\frac{x}{2}"#, displayMode: true)))
+        XCTAssertTrue(result.html.contains(#"$\badcommand{&lt;script&gt;}$"#))
+        XCTAssertFalse(result.html.contains("<script>"))
+        XCTAssertTrue(result.html.contains("hljs-keyword"))
+        XCTAssertTrue(result.html.contains("id=\"page-1\""))
+        XCTAssertTrue(result.html.contains("viewBox="))
+        XCTAssertFalse(result.html.contains("SWIFTMDMATH"))
+    }
+
+    func testStructuredDisplayMathFailurePreservesEscapedSource() throws {
+        let (math, _) = try renderers()
+        let source = "$$\n\\badcommand{<script> & x}\n$$"
+        let parts: [MathDocumentPart] = [.html("<p>before</p>"),
+            .math(.init(index: 0, literal: #"\badcommand{<script> & x}"#, source: source, displayMode: true)),
+            .html("<p>after</p>")]
+        let result = try BlockCompiler(renderers: []).render(parts, mathRenderer: math)
+        XCTAssertEqual(result.diagnostics.count, 1)
+        XCTAssertTrue(result.html.contains("<pre><code>$$\n\\badcommand{&lt;script&gt; &amp; x}\n$$</code></pre>"))
+        XCTAssertFalse(result.html.contains("<script>"))
+    }
+
+    func testStructuredMathPreservesAdjacentCombiningUnicode() throws {
+        let (math, _) = try renderers()
+        let parts: [MathDocumentPart] = [
+            .html("<p>"), .math(.init(index: 0, literal: "x", source: "$x$", displayMode: false)),
+            .html("\u{0301} and \u{2764}\u{fe0f}"),
+            .math(.init(index: 1, literal: "y", source: "$y$", displayMode: false)), .html("</p>")
+        ]
+        let result = try BlockCompiler(renderers: [HighlightRenderer()]).render(parts, mathRenderer: math)
+        let x = try math.renderMath(literal: "x", displayMode: false)
+        let y = try math.renderMath(literal: "y", displayMode: false)
+        XCTAssertTrue(result.diagnostics.isEmpty, "\(result.diagnostics)")
+        XCTAssertEqual(result.html, "<p>\(x)\u{0301} and \u{2764}\u{fe0f}\(y)</p>")
+    }
     func testEightRealDiagramTypes() throws {
         let (_, diagram) = try renderers()
         let samples = ["flowchart LR\nA-->B", "sequenceDiagram\nAlice->>Bob: Hello", "classDiagram\nA <|-- B", "stateDiagram-v2\n[*] --> Active", "erDiagram\nUSER ||--o{ POST : writes", "gantt\n title A\n dateFormat YYYY-MM-DD\n section X\n Task :a, 2020-01-01, 2d", "pie\n \"A\" : 2\n \"B\" : 3", "mindmap\n  root((Root))\n    Child"]

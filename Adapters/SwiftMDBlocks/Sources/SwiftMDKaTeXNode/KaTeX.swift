@@ -5,7 +5,7 @@ import SwiftMDBlocks
 
 /// Runs the explicitly supplied, trusted Node executable and KaTeX installation.
 /// This is not a sandbox: no execution-time or memory limit is enforced.
-public struct KaTeXNodeRenderer: BlockRenderer {
+public struct KaTeXNodeRenderer: BlockRenderer, MathMLRenderer {
     public let node: String
     public let module: String
     public init(node: String, module: String) throws {
@@ -15,19 +15,23 @@ public struct KaTeXNodeRenderer: BlockRenderer {
     }
     public func accepts(language: String) -> Bool { language == "math" }
     public func render(literal: String, language: String, index: Int) throws -> BlockReplacement {
+        .blockHTML(try renderMath(literal: literal, displayMode: true))
+    }
+    /// Render TeX directly. Markdown delimiter recognition is not included.
+    public func renderMath(literal: String, displayMode: Bool) throws -> String {
         guard literal.utf8.count <= 16_384 else { throw NodeRendererError.inputTooLarge }
         let script = #"""
         const fs = require('node:fs');
         const request = JSON.parse(fs.readFileSync(0, 'utf8'));
         const katex = require(request.module);
         process.stdout.write(katex.renderToString(request.text, {
-          output:'mathml', displayMode:true, trust:false, throwOnError:true,
+          output:'mathml', displayMode:request.displayMode === 'block', trust:false, throwOnError:true,
           strict:'error', maxExpand:500, maxSize:10
         }));
         """#
-        let html = try NodeProcess.run(node: node, script: script, request: ["module": module, "text": literal])
+        let html = try NodeProcess.run(node: node, script: script, request: ["module": module, "text": literal, "displayMode": displayMode ? "block" : "inline"])
         guard html.contains("<math"), !html.isEmpty else { throw NodeRendererError.invalidOutput }
-        return .blockHTML(html)
+        return html
     }
 }
 

@@ -45,14 +45,27 @@ private final class Runtime: @unchecked Sendable {
     }
 }
 
-private struct MathRenderer: BlockRenderer {
-    let runtime: Runtime
-    func accepts(language: String) -> Bool { language == "math" }
-    func render(literal: String, language: String, index: Int) throws -> BlockReplacement {
+/// Renders TeX with a caller-supplied, trusted KaTeX JavaScript bundle.
+/// This does not parse Markdown delimiters or enforce a hard runtime limit.
+public struct KaTeXJavaScriptCoreRenderer: BlockRenderer, MathMLRenderer {
+    private let runtime: Runtime
+    public init(script: String) throws {
+        let wrapper = #"""
+        (function(tex, displayMode) { return katex.renderToString(tex, {output:'mathml',displayMode:displayMode,
+        trust:false,throwOnError:true,strict:'error',maxExpand:500,maxSize:10}); })
+        """#
+        runtime = try Runtime(script: script, wrapper: wrapper)
+    }
+    public func accepts(language: String) -> Bool { language == "math" }
+    public func render(literal: String, language: String, index: Int) throws -> BlockReplacement {
+        .blockHTML(try renderMath(literal: literal, displayMode: true))
+    }
+    /// Render TeX directly. Markdown delimiter recognition is not included.
+    public func renderMath(literal: String, displayMode: Bool) throws -> String {
         guard literal.utf8.count <= 16_384 else { throw JavaScriptCoreRendererError.inputTooLarge }
-        let html = try runtime.call([literal])
+        let html = try runtime.call([literal, displayMode])
         guard html.contains("<math") else { throw JavaScriptCoreRendererError.invalidOutput }
-        return .blockHTML(html)
+        return html
     }
 }
 
@@ -77,19 +90,21 @@ private struct DiagramRenderer: BlockRenderer {
 /// has no enforced deadline or memory cap here; do not mistake a task timeout
 /// for termination of executing JavaScript. The SVG prefix must be unique on
 /// the final composed page. Without renderers, core HTML bytes are preserved.
+/// Dollar-delimited Markdown math requires `recognizeMath` and a KaTeX script.
 public struct SwiftMDAppleRenderer: Sendable {
     private let compiler: BlockCompiler
+    private let mathRenderer: KaTeXJavaScriptCoreRenderer?
 
     public init(configuration: MarkdownConfiguration = .gfm, highlight: Bool = true,
-                katexScript: String? = nil, peleScript: String? = nil, svgPrefix: String? = nil) throws {
+                katexScript: String? = nil, peleScript: String? = nil, svgPrefix: String? = nil,
+                recognizeMath: Bool = false) throws {
+        guard !recognizeMath || katexScript != nil else { throw MarkdownMathConfigurationError.rendererRequired }
         var renderers: [any BlockRenderer] = []
+        var selectedMathRenderer: KaTeXJavaScriptCoreRenderer?
         if let katexScript {
-            let wrapper = #"""
-            (function(tex) { return katex.renderToString(tex, {output:'mathml',displayMode:true,
-            trust:false,throwOnError:true,strict:'error',maxExpand:500,maxSize:10}); })
-            """#
-            let runtime = try Runtime(script: katexScript, wrapper: wrapper)
-            renderers.append(MathRenderer(runtime: runtime))
+            let renderer = try KaTeXJavaScriptCoreRenderer(script: katexScript)
+            renderers.append(renderer)
+            if recognizeMath { selectedMathRenderer = renderer }
         }
         if let peleScript {
             guard let prefix = svgPrefix, !prefix.isEmpty, prefix.utf8.count <= 64,
@@ -107,9 +122,13 @@ public struct SwiftMDAppleRenderer: Sendable {
         }
         if highlight { renderers.append(HighlightRenderer()) }
         compiler = BlockCompiler(compiler: MarkdownCompiler(configuration: configuration), renderers: renderers)
+        self.mathRenderer = selectedMathRenderer
     }
 
     /// Compile Markdown to HTML and per-block diagnostics.
-    public func render(_ markdown: String) throws -> BlockResult { try compiler.render(markdown) }
+    public func render(_ markdown: String) throws -> BlockResult {
+        if let mathRenderer { return try compiler.renderRecognizingMath(markdown, mathRenderer: mathRenderer) }
+        return try compiler.render(markdown)
+    }
 }
 #endif

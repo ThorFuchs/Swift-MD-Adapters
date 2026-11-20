@@ -1,13 +1,15 @@
 {
-  "source_commit": "bc18264c1752c06c5da5c2c6904931e9eda366c2",
+  "source_commit": "2736190651cc7acf23721abc15c4af7d8e39f770",
   "local_test_only": false,
   "dependencies": {
     "CORE_URL": "https://github.com/ThorFuchs/Swift-MD.git",
-    "CORE_VERSION": "1.0.1",
+    "CORE_VERSION": "1.1.0",
     "GFM_URL": "https://github.com/ThorFuchs/Swift-GFM.git",
-    "GFM_VERSION": "1.0.1",
+    "GFM_VERSION": "1.1.0",
     "HIGHLIGHT_URL": "https://github.com/ThorFuchs/Swift-Highlight.git",
-    "HIGHLIGHT_VERSION": "1.0.1"
+    "HIGHLIGHT_VERSION": "1.0.1",
+    "SWIFTHTML_URL": "https://github.com/ThorFuchs/Swift-HTML.git",
+    "SWIFTHTML_VERSION": "0.1.1"
   },
   "renderer_resources": {
     "katex": {
@@ -41,35 +43,25 @@
   "verified_public_tags": {
     "swift-gfm": {
       "url": "https://github.com/ThorFuchs/Swift-GFM.git",
-      "version": "1.0.1",
-      "revision": "2cb9450cf755858d338525fe64081b5f04864a2d"
+      "version": "1.1.0",
+      "revision": "9a4176be3bda0953f4ddb91ec63de77d1ad230fa"
     },
     "swift-highlight": {
       "url": "https://github.com/ThorFuchs/Swift-Highlight.git",
       "version": "1.0.1",
       "revision": "71d23c52a4afe154acdcc3b8aee968f0bf1b8564"
     },
-    "lrucache": {
-      "url": "https://github.com/nicklockwood/LRUCache.git",
-      "version": "1.3.0",
-      "revision": "f0570e943ea4445d258113ba73f50cb2b7e564ac"
-    },
-    "swift-atomics": {
-      "url": "https://github.com/apple/swift-atomics.git",
-      "version": "1.3.1",
-      "revision": "0442cb5a3f98ab802acb777929fdb446bda11a34"
+    "swift-html": {
+      "url": "https://github.com/ThorFuchs/Swift-HTML.git",
+      "version": "0.1.1",
+      "revision": "54eb43255083dcfcb9beca6c519c56389e7baaa5"
     },
     "swift-md": {
       "url": "https://github.com/ThorFuchs/Swift-MD.git",
-      "version": "1.0.1",
-      "revision": "bc18264c1752c06c5da5c2c6904931e9eda366c2"
+      "version": "1.1.0",
+      "revision": "2736190651cc7acf23721abc15c4af7d8e39f770"
     }
   },
-  "vendored_swiftsoup": {
-    "repository": "https://github.com/scinfu/SwiftSoup.git",
-    "version": "2.11.3",
-    "revision": "d86f244ed497d48012782e2f59c985a55e77b3f5",
-    "sources_tree": "33ce5dc7a74bac14957780845869dd7f8e809e0d"
-  },
+  "swifthtml_tested_revision": "54eb43255083dcfcb9beca6c519c56389e7baaa5",
   "release_review_required": true
 }

@@ -3,7 +3,8 @@
 The local `SwiftMDCompiler` product provides a unified API over the existing
 renderers. Node and module paths must be explicitly supplied as trusted
 absolute paths; install the pinned modules with `npm ci --ignore-scripts` in
-`Tools/NodeDependencies`. No adapter mirror has been published yet.
+`Tools/NodeDependencies`. The adapter resolves public SwiftHTML 0.1.1 at the revision in
+`SwiftHTML-PROVENANCE.json`.
 
 ```swift
 import SwiftMDCompiler
@@ -22,6 +23,9 @@ for diagnostic in result.diagnostics { print(diagnostic.message) }
 
 Highlighting is enabled by default; pass `highlight: false` to turn it off.
 Math and Mermaid are enabled independently by supplying their configuration.
+Pass `recognizeMath: true` as well to recognize
+inline and display Markdown mathematics; KaTeX configuration is required. The
+default preserves literal dollar-delimited text and existing `math` fences.
 With all three disabled, output is byte-identical to the core. Renderer errors
 produce diagnostics and preserve escaped source; check diagnostics rather than
 assuming every requested block rendered successfully. Prefixes must be unique
@@ -39,12 +43,12 @@ experimental `SwiftMDBundled` product: it downloads the npm archives pinned in
 the source lockfile, verifies their integrity, embeds the selected unchanged
 renderer files and licenses as SwiftPM resources, and records their hashes and
 provenance. This does not check generated dependencies into the source repo.
-It is not yet a published package. Apple hosts use JavaScriptCore; Linux still
+Apple hosts use JavaScriptCore; Linux still
 requires a trusted absolute Node executable. The embedded artifact and its
 complete third-party notices must be reviewed before any distribution release.
 
 `SwiftMDBlocks` is an opt-in HTML profile: it parses and reserializes the
-SwiftGFM HTML with SwiftSoup and processes matching `pre > code` elements.
+SwiftGFM HTML with SwiftHTML and processes matching `pre > code` elements.
 With no renderers it bypasses parsing and returns the exact core bytes. Source
 provenance cannot be established from HTML, so author-written matching raw HTML
 is processed too. Nested non-text code content is retained with a diagnostic.
@@ -88,5 +92,6 @@ so too-small address-space limits can prevent Node from starting. Use cgroups an
 an OS sandbox for aggregate memory and stronger isolation.
 The optional package currently resolves Swift-Highlight even for other products;
 the root Core package avoids that dependency. Swift-Highlight is pinned to its
-public 1.0.1 tag (commit 71d23c52a4afe154acdcc3b8aee968f0bf1b8564). SwiftPM remote adapter distribution is not yet
-available. No `$$` or inline mathematics is implemented.
+public 1.0.1 tag (commit 71d23c52a4afe154acdcc3b8aee968f0bf1b8564). A public
+SwiftHTML-based adapter distribution requires its own release checks. See the
+[math profile](../../Documentation/INTEGRATED_RENDERING.md) for parser limits.
