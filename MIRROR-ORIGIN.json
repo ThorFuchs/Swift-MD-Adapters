@@ -1,9 +1,9 @@
 {
-  "source_commit": "2736190651cc7acf23721abc15c4af7d8e39f770",
+  "source_commit": "ac3f5ed9099f2ad4046c311272c4daab19e5c535",
   "local_test_only": false,
   "dependencies": {
     "CORE_URL": "https://github.com/ThorFuchs/Swift-MD.git",
-    "CORE_VERSION": "1.1.0",
+    "CORE_VERSION": "1.2.0",
     "GFM_URL": "https://github.com/ThorFuchs/Swift-GFM.git",
     "GFM_VERSION": "1.1.0",
     "HIGHLIGHT_URL": "https://github.com/ThorFuchs/Swift-Highlight.git",
@@ -58,8 +58,8 @@
     },
     "swift-md": {
       "url": "https://github.com/ThorFuchs/Swift-MD.git",
-      "version": "1.1.0",
-      "revision": "2736190651cc7acf23721abc15c4af7d8e39f770"
+      "version": "1.2.0",
+      "revision": "ac3f5ed9099f2ad4046c311272c4daab19e5c535"
     }
   },
   "swifthtml_tested_revision": "54eb43255083dcfcb9beca6c519c56389e7baaa5",
