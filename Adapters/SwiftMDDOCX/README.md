@@ -15,9 +15,9 @@ try document.write(to: URL(fileURLWithPath: "example.docx"), options: .atomic)
 // Or: DOCXStyle(paper: .letter, bodyFont: "Calibri", headingPageBreak: true)
 ```
 
-The source package is `Adapters/SwiftMDDOCX`; the canonical adapter-mirror
-generator includes its product for a future generated distribution. No mirror
-or version containing this spike is published merely by building the source.
+The source package is `Adapters/SwiftMDDOCX`. The generated
+[adapter mirror](https://github.com/ThorFuchs/Swift-MD-Adapters) has included
+the `SwiftMDDOCX` product since version 1.1.0.
 The adapter depends on SwiftGFM 1.1.0 and preserves its default GFM parsing.
 The DOCX projection does not render Markdown math into Office Math.
 
