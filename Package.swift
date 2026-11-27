@@ -16,7 +16,7 @@ let package = Package(
         .executable(name: "swift-md", targets: ["SwiftMDCLI"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/ThorFuchs/Swift-MD.git", exact: "1.2.0"),
+        .package(url: "https://github.com/ThorFuchs/Swift-MD.git", exact: "1.3.0"),
         .package(url: "https://github.com/ThorFuchs/Swift-GFM.git", exact: "1.1.0"),
         .package(url: "https://github.com/ThorFuchs/Swift-Highlight.git", exact: "1.0.1"),
         .package(url: "https://github.com/ThorFuchs/Swift-HTML.git", exact: "0.1.1"),
